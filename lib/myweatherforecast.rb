@@ -16,10 +16,10 @@ class MyWeatherForecast
 
     if si then
       params = { units: 'si' }
-      @tlabel = 'degrees Celcius'
+      @tlabel = '°C'
     else 
       params = {}
-      @tlabel = 'degrees Farenheit'
+      @tlabel = '°F'
     end
 
     @forecast = ForecastIO.forecast(lat, lon, params: params)
@@ -27,52 +27,80 @@ class MyWeatherForecast
 
   class Day
 
-    def initialize(x, tlabel)
+    def initialize(forecast, tlabel)
       
-      @x = x
+      @forecast = forecast
+      @x = forecast.currently
       @tlabel = tlabel
 
+    end    
+    
+    def at(raw_hour)
+      
+      hour = Time.parse(raw_hour).hour
+      i = 0
+      i += 1 until Time.at(@forecast['hourly']['data'][i]['time']).hour \
+                                                                  ==  hour.to_i
+      @x = @forecast['hourly']['data'][i]
+      self
+    end
+    
+    def humidity()
+      @x.humidity
+    end
+    
+    def icon()
+      @x.icon
     end
 
     def to_s
-      "%s %s, %s" % [@x.temperature.round, @tlabel, @x.summary]
+      "%d%s, %s" % [@x.temperature.round, @tlabel, @x.summary]
     end
 
     def summary()
       @x.summary
     end
-
+    
     def temperature
-      @x.temperature
+      "%s°" % @x.temperature.round
     end
+    
+    def time
+      Time.at @x.time
+    end
+
+    def visibility()
+      @x.visibility
+    end
+    
+    def windspeed()
+      @x.windSpeed.round
+    end
+    
   end
-
-  class DaysAhead
-
-    def initialize(x, tlabel)
+  
+  class DaysAhead < Day
+    
+    def initialize(forecast, tlabel, index: 0)
       
-      @x = x
+      @forecast = forecast
+      @x = forecast['hourly']['data'][index]      
       @tlabel = tlabel
-
-    end
-
-    def to_s
-      "%s" % [@x.summary]
-    end
-
-    def summary()
-      @x.summary
+      
     end
 
   end
 
   def today()
-    Day.new(@forecast.currently, @tlabel)
+    Day.new(@forecast, @tlabel)
   end
 
   def tomorrow()
-    DaysAhead.new(@forecast['daily']['data'][1], @tlabel)
+    
+    # select tomorrow at midday
+    i = 0
+    i += 1 until Time.at(@forecast['hourly']['data'][i]['time']).hour ==  12
+    DaysAhead.new(@forecast, @tlabel, index: i)
   end
 
 end
-
