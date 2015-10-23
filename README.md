@@ -1,3 +1,26 @@
+# What's new in the myweatherforecast gem version 0.3.3
+
+    require 'myweatherforecast'
+
+    w = MyWeatherForecast.new api_key: '465bxxxxxxxxx76ea01cbff4', timeout: 6
+
+    puts w.now               #=> 10Â°C, Overcast
+    w.saturday.now           #=> 12Â°C, Mostly Cloudy
+    puts w.saturday.at '3pm' #=> 13Â°C, Mostly Cloudy
+
+    puts w.monday 
+    #=> min: 8Â° max: 12Â°, Mostly cloudy throughout the day.
+
+    puts w.monday.at '3pm'
+    #=> Monday outlook: 8Â° - 12Â°, Mostly cloudy throughout the day.
+
+There's a couple of new features in this version. The location can now be retrieved automatically using your IP address from the geocoder gem. The forecast for any day of the week can now be retrieved.
+
+Note: The IP address to GPS coordinates service used by the geocoder gem can lead to a timeout error when the service is apparently under heavy load.
+
+-------------
+
+
 # What's new in the myweatherforecast gem version 0.3.1
 
     require 'myweatherforecast'
