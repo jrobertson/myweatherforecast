@@ -138,7 +138,8 @@ class MyWeatherForecast
     end
 
     def to_s
-      "min: %s max: %s, %s" % [tempmin, tempmax, @x.summary]
+      "%s: %s - %s, %s" % [Date::ABBR_DAYNAMES[self.time.wday], \
+                                                  tempmin, tempmax, @x.summary]
     end
     
     def temperature()
@@ -155,6 +156,21 @@ class MyWeatherForecast
 
   end
 
+  
+  # e.g.
+  # require 'myweatherforecast'
+  #
+  # w = MyWeatherForecast.new api_key: '465xxxxxxxxxxxxxx76ea01cbff4'
+  # puts w.days.take 3
+  #
+  # Fri: 8° - 14°, Mostly cloudy throughout the day.
+  # Sat: 6° - 13°, Light rain until afternoon.
+  # Sun: 5° - 12°, Mostly cloudy throughout the day.
+
+  def days()
+    @forecast['daily']['data'].map {|day| OutlookDay.new(day, @tlabel) }
+  end
+  
   def today()
     Day.new(@forecast, @tlabel)
   end
