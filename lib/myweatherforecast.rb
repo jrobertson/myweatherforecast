@@ -66,12 +66,6 @@ class MyWeatherForecast
         [forecast.currently, forecast['hourly']['data']]
       end
 
-      found = @forecast['daily']['data'].detect do |day|
-        self.time.to_date == Time.at(day.time).to_date
-      end
-      
-      @day = Daily.new found, @tlabel
-      
     end    
     
     def at(raw_hour)
@@ -262,18 +256,8 @@ class MyWeatherForecast
   alias now today
   alias this today
   
-  def tomorrow()
-    
-    # select tomorrow at midday
-    i = 0
-    
-    if Time.at(@forecast['hourly']['data'][i]['time']).hour == 0 then
-      i += 24 
-    else
-      i += 1 until Time.at(@forecast['hourly']['data'][i]['time']).hour ==  0
-    end
-    
-    Hourly.new(@forecast, @tlabel, i)
+  def tomorrow()    
+    Daily.new(@forecast, @tlabel, 1)
   end 
   
   def monday()    day :monday    end
