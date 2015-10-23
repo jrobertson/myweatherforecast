@@ -1,3 +1,56 @@
+# What's new in myweatherforecast gem version 0.5.1
+
+    require 'myweatherforecast'
+
+    w = MyWeatherForecast.new 'Lochend, Edinburgh', api_key: '465xxxxxxxxxx76ea01cbff4'
+
+    puts w.tomorrow.morning
+
+<pre>
+6am: 13°C, Drizzle
+7am: 14°C, Drizzle
+8am: 12°C, Drizzle
+9am: 11°C, Light Rain
+10am: 9°C, Light Rain
+11am: 9°C, Light Rain
+12pm: 9°C, Drizzle
+</pre>
+
+    puts w.tonight
+
+<pre>
+9pm: 12°C, Mostly Cloudy
+10pm: 12°C, Drizzle
+11pm: 12°C, Drizzle
+</pre>
+
+    puts w.days[1..3]
+
+<pre>
+Sat: ▽6° ▲14°, Light rain until afternoon.
+Sun: ▽5° ▲12°, Mostly cloudy throughout the day.
+Mon: ▽7° ▲12°, Mostly cloudy throughout the day.
+</pre>
+
+    puts w.sunday.at '3pm' #=> 3pm: 12°C, Mostly Cloudy
+
+    puts w.hours[0..6]
+
+<pre>
+9pm: 12°C, Mostly Cloudy
+10pm: 12°C, Drizzle
+11pm: 12°C, Drizzle
+12am: 12°C, Mostly Cloudy
+1am: 12°C, Overcast
+2am: 12°C, Mostly Cloudy
+3am: 12°C, Mostly Cloudy
+</pre>
+
+
+In this new release of the gem, a series of hours can be returned for the morning, afternoon, and evening, or as a list of hours for the next couple of days. Also there's a new object called *this* which is an alias for today as it makes it more readable with periods (e.g. *w.this.afternoon*).
+
+-----------------------------
+
 # What's new in the myweatherforecast gem version 0.4.0
 
     require 'myweatherforecast'
