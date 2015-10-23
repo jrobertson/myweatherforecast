@@ -40,10 +40,10 @@ class MyWeatherForecast
 
   class Day
 
-    def initialize(forecast, tlabel)
+    def initialize(forecast, tlabel, i=nil)
       
       @forecast = forecast
-      @x = forecast.currently
+      @x = i ? forecast['hourly']['data'][i] : forecast.currently
       @tlabel = tlabel
 
     end    
@@ -54,8 +54,7 @@ class MyWeatherForecast
       i = 0
       i += 1 until Time.at(@forecast['hourly']['data'][i]['time']).hour \
                                                                   ==  hour.to_i
-      @x = @forecast['hourly']['data'][i]
-      self
+      Day.new(@forecast, @tlabel, i)
     end
     
     def humidity()
@@ -99,8 +98,19 @@ class MyWeatherForecast
       @forecast = forecast
       @x = forecast['hourly']['data'][index]      
       @tlabel = tlabel
+      @i = index
       
     end
+    
+    def at(raw_hour)
+      
+      hour = Time.parse(raw_hour).hour
+
+      i = @i - 12
+      i += 1 until Time.at(@forecast['hourly']['data'][i]['time']).hour \
+                                                                  ==  hour.to_i
+      DaysAhead.new(@forecast, @tlabel, index: i)
+    end    
 
   end
 
