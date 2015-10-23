@@ -5,7 +5,7 @@
     w = MyWeatherForecast.new api_key: '465bxxxxxxxxx76ea01cbff4', timeout: 6
 
     puts w.now               #=> 10°C, Overcast
-    w.saturday.now           #=> 12°C, Mostly Cloudy
+    puts w.saturday          #=> 12°C, Mostly Cloudy
     puts w.saturday.at '3pm' #=> 13°C, Mostly Cloudy
 
     puts w.monday 
