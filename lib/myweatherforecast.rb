@@ -132,23 +132,24 @@ class MyWeatherForecast
       @tlabel = tlabel
     end
     
-    def at()
+    def at(*a)
+      "%s outlook: %s - %s, %s" % [Date::DAYNAMES[self.time.wday], \
+                                                  tempmin, tempmax, @x.summary]
     end
 
     def to_s
-      "min: %d%s max: %d%s, %s" % [@x.tempmin, @tlabel, \
-                                             @x.tempmax, @tlabel, @x.summary]
+      "min: %s max: %s, %s" % [tempmin, tempmax, @x.summary]
     end
     
     def temperature()
     end
 
     def tempmin
-      "%s°" % @x.temperatureMin.round
+      "%s°" % [@x.temperatureMin.round]
     end
                                  
     def tempmax
-      "%s°" % @x.temperatureMax.round
+      "%s°" % [@x.temperatureMax.round]
     end
     
 
