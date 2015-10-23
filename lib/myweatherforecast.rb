@@ -244,16 +244,20 @@ class MyWeatherForecast
 
   end
   
+  def now()
+    Hourly.new(@forecast, @tlabel)
+  end
+    
   def today()
     Daily.new(@forecast, @tlabel)
   end
+  
+  alias currently now  
   
   def tonight()
     Daily.new(@forecast, @tlabel).night
   end
         
-  alias currently today
-  alias now today
   alias this today
   
   def tomorrow()    
