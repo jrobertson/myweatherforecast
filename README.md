@@ -1,3 +1,20 @@
+# What's new in the myweatherforecast gem version 0.4.0
+
+    require 'myweatherforecast'
+
+    w = MyWeatherForecast.new api_key: '465xxxxxxxxxxxxxx76ea01cbff4'
+    puts w.days.take 3
+
+output:
+
+<pre>
+Fri: 8° - 14°, Mostly cloudy throughout the day.
+Sat: 6° - 13°, Light rain until afternoon.
+Sun: 5° - 12°, Mostly cloudy throughout the day.
+</pre>
+
+---------------------
+
 # What's new in the myweatherforecast gem version 0.3.3
 
     require 'myweatherforecast'
