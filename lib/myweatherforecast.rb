@@ -2,28 +2,40 @@
 
 # file: myweatherforecast.rb
 
-require 'forecast_io'
 require 'time'
+require 'geocoder'
+require 'forecast_io'
+
+
 
 # This gem is a wrapper of the forecast_io gem
 # SI explained: https://en.wikipedia.org/wiki/SI_derived_unit
 
 class MyWeatherForecast
 
-  def initialize(lat, lon, api_key: nil, si: true)
-
-    ForecastIO.api_key = api_key
-  
-
-    if si then
-      params = { units: 'si' }
-      @tlabel = '°C'
-    else 
-      params = {}
-      @tlabel = '°F'
+  def initialize(*location, api_key: nil, units: :auto)
+    
+    lat, lon = if location.length > 1 then
+    
+      location
+      
+    else
+      
+      results = Geocoder.search(location.first)
+      return puts 'location not found' unless results.any?
+      results[0].coordinates
+      
     end
 
+    ForecastIO.api_key = api_key
+
+    params = { units: units.to_s }
     @forecast = ForecastIO.forecast(lat, lon, params: params)
+
+    autounits = @forecast['flags']['units']
+    
+    @tlabel = autounits == 'us' ? '°F' : '°C'      
+    
   end
 
   class Day
@@ -100,9 +112,11 @@ class MyWeatherForecast
     
     # select tomorrow at midday
     i = 0
+    
+    i += 7 if Time.at(@forecast['hourly']['data'][i]['time']).hour >= 6
+    
     i += 1 until Time.at(@forecast['hourly']['data'][i]['time']).hour ==  12
     DaysAhead.new(@forecast, @tlabel, index: i)
   end
 
 end
-
