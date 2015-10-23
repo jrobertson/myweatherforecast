@@ -2,9 +2,11 @@
 
 # file: myweatherforecast.rb
 
+require 'json'
 require 'time'
 require 'geocoder'
 require 'forecast_io'
+require 'open-uri'
 
 
 
@@ -13,18 +15,27 @@ require 'forecast_io'
 
 class MyWeatherForecast
 
-  def initialize(*location, api_key: nil, units: :auto)
+  def initialize(*location, api_key: nil, units: :auto, timeout: 3)
     
     lat, lon = if location.length > 1 then
     
       location
       
-    else
+    elsif location.any?
       
       results = Geocoder.search(location.first)
       return puts 'location not found' unless results.any?
       results[0].coordinates
       
+    else
+      
+      h = JSON.parse open('http://jsonip.com/').read
+      Geocoder.configure(timeout: timeout)
+      results = Geocoder.search(h['ip'])
+      return puts 'could not determine location from IP address' unless \
+                                                                   results.any?
+      results[0].coordinates
+                              
     end
 
     ForecastIO.api_key = api_key
@@ -113,10 +124,41 @@ class MyWeatherForecast
     end    
 
   end
+                                 
+  class OutlookDay < Day
+                                 
+    def initialize(day, tlabel)
+      @x = day
+      @tlabel = tlabel
+    end
+    
+    def at()
+    end
+
+    def to_s
+      "min: %d%s max: %d%s, %s" % [@x.tempmin, @tlabel, \
+                                             @x.tempmax, @tlabel, @x.summary]
+    end
+    
+    def temperature()
+    end
+
+    def tempmin
+      "%s°" % @x.temperatureMin.round
+    end
+                                 
+    def tempmax
+      "%s°" % @x.temperatureMax.round
+    end
+    
+
+  end
 
   def today()
     Day.new(@forecast, @tlabel)
   end
+  
+  alias now today
 
   def tomorrow()
     
@@ -127,6 +169,39 @@ class MyWeatherForecast
     
     i += 1 until Time.at(@forecast['hourly']['data'][i]['time']).hour ==  12
     DaysAhead.new(@forecast, @tlabel, index: i)
+  end
+  
+  def monday()    day :monday    end
+  def tuesday()   day :tuesday   end
+  def wednesday() day :wednesday end
+  def thursday()  day :thursday  end
+  def friday()    day :friday    end
+  def saturday()  day :saturday  end
+  def sunday()    day :sunday    end
+    
+  alias sat saturday
+  alias sun sunday
+  alias mon monday
+  alias tue tuesday
+  alias wed wednesday
+  alias thu thursday
+  alias fri friday
+
+  private
+  
+  def day(name)
+    
+    name = (name.to_s + '?').to_sym
+    len = @forecast['hourly']['data'].length
+    i = 0
+    i += 1 until Time.at(@forecast['hourly']['data'][i]['time']).\
+                                              method(name).call or i >= len - 1
+    return DaysAhead.new(@forecast, @tlabel, index: i) unless i == len - 1
+                                 
+    d = 0 
+    d += 1 until Time.at(@forecast['daily']['data'][d].time).method(name).call
+    Time.at(@forecast['daily']['data'][d].time)
+    OutlookDay.new(@forecast['daily']['data'][d], @tlabel)    
   end
 
 end
