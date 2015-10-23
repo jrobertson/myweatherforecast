@@ -3,6 +3,7 @@
 # file: myweatherforecast.rb
 
 require 'forecast_io'
+require 'time'
 
 # This gem is a wrapper of the forecast_io gem
 # SI explained: https://en.wikipedia.org/wiki/SI_derived_unit
@@ -104,3 +105,4 @@ class MyWeatherForecast
   end
 
 end
+
