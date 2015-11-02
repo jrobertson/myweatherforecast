@@ -17,9 +17,10 @@ class MyWeatherForecast
   
   attr_reader :coordinates
 
-  def initialize(*location, api_key: nil, units: :auto, timeout: 3)
+  def initialize(*location, api_key: nil, units: :auto, timeout: 3, \
+                                                               symbols: true)
     
-    lat, lon = if location.length > 1 then
+    lat, lon = if location.length > 1 or location.is_a? Array then
     
       location
       
@@ -47,9 +48,15 @@ class MyWeatherForecast
 
     autounits = @forecast['flags']['units']
     
-    @tlabel = autounits == 'us' ? '°F' : '°C'      
-    @coordinates = [lat, lon]
+    @tlabel = if symbols then
+      autounits == 'us' ? '°F' : '°C'
+    else
+      autounits == 'us' ? 'degrees Farenheit' : 'degrees Celcius'
+    end
     
+    @coordinates = [lat, lon]
+    @symbols = symbols
+
   end
 
   class Hourly
@@ -197,7 +204,8 @@ class MyWeatherForecast
       label = self.time.to_date == Time.now.to_date ? 'Today' : \
                                             Date::ABBR_DAYNAMES[self.time.wday]
       
-      "%s: ▽%s ▲%s, %s" % [label, tempmin, tempmax, @x.summary]
+      mask = @symbols ? "%s: ▽%s ▲%s, %s" : "%s: %s %s, %s"
+      mask % [label, tempmin, tempmax, @x.summary]
     end
     
     def sunrise()
