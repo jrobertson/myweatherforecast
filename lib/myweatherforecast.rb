@@ -19,10 +19,9 @@ class MyWeatherForecast
 
   def initialize(*location, api_key: nil, units: :auto, timeout: 3, \
                                                                symbols: true)
+    lat, lon = if location[0].is_a? Array then
     
-    lat, lon = if location.length > 1 or location.is_a? Array then
-    
-      location
+      location[0]
       
     elsif location.any?
       
@@ -72,6 +71,9 @@ class MyWeatherForecast
       else
         [forecast.currently, forecast['hourly']['data']]
       end
+      
+      @speed_label = 'kph'
+      @speed_label = 'mph' if @forecast['flags']['units'][/^uk2$/]
 
     end    
     
@@ -113,8 +115,9 @@ class MyWeatherForecast
     alias midday noon
 
     def to_s
-      "%s: %d%s, %s" % [self.time.strftime("%-I%P"), @x.temperature.round, \
+      r = "%s: %d%s, %s" % [self.time.strftime("%-I%P"), @x.temperature.round, \
                                                           @tlabel, @x.summary]
+      r << ", %s" % [windspeed] if r[/windy|breezy/i]      
     end
 
     def summary()
@@ -146,7 +149,7 @@ class MyWeatherForecast
     end
     
     def windspeed()
-      @x.windSpeed.round
+      "%s%s" % [@x.windSpeed.round, @speed_label]
     end
     
     private
