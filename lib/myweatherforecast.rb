@@ -72,8 +72,8 @@ class MyWeatherForecast
         [forecast.currently, forecast['hourly']['data']]
       end
       
-      @speed_label = 'kph'
-      @speed_label = 'mph' if @forecast['flags']['units'][/^uk2$/]
+      #@speed_label = 'kph'
+      @speed_label = 'mph' #if @forecast['flags']['units'][/^uk2$/]
 
     end    
     
@@ -118,6 +118,7 @@ class MyWeatherForecast
       r = "%s: %d%s, %s" % [self.time.strftime("%-I%P"), @x.temperature.round, \
                                                           @tlabel, @x.summary]
       r << ", %s" % [windspeed] if r[/windy|breezy/i]      
+      r
     end
 
     def summary()
