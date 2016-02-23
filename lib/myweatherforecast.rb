@@ -90,11 +90,30 @@ class MyWeatherForecast
 
     end
     
-    def afternoon()   period(12, 17)                end    
+    def ahead()
+      
+      current_hour = Time.at(@hourly_data[0]['time']).hour         
+      
+      case current_hour
+      when 12..17
+        :afternoon
+      when 0..5
+        :early_hours
+      when 17..(night_time.hour+1)
+        :evening
+      when 6..12
+        :morning
+      when night_time.hour..23
+        :night
+      end      
+      
+    end
+    
+    def afternoon()   period(12, 17)                end         
     def early_hours() period(0, 5)                  end
     def evening()     period(17, night_time.hour+1) end
     def morning()     period(6, 12)                 end    
-    def night()       period(night_time.hour, 23)   end
+    def night()       period(night_time.hour, 23)   end      
     
     def night_time()
       Time.at(@day.sunsetTime)
