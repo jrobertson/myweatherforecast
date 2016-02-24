@@ -90,9 +90,9 @@ class MyWeatherForecast
 
     end
     
-    def ahead()
+    def ahead(advance=2)
       
-      current_hour = Time.at(@hourly_data[0]['time']).hour         
+      current_hour = Time.at(@hourly_data[0]['time']).hour + advance
       
       case current_hour
       when 12..17
