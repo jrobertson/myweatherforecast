@@ -5,9 +5,9 @@
 require 'json'
 require 'time'
 require 'geocoder'
-require 'forecast_io'
 require 'open-uri'
-
+require 'emoji2020'
+require 'forecast_io'
 
 
 # This gem is a wrapper of the forecast_io gem
@@ -111,6 +111,31 @@ class MyWeatherForecast
     
     def afternoon()   period(12, 17)                end         
     def early_hours() period(0, 5)                  end
+      
+    def emoji()
+      
+      h = {
+        'clear-day' => :sun,
+        'partly-cloudy-day' => :sun_behind_cloud
+      }
+      
+      h = {
+        'clear-day' => :sun,
+        'clear-night' => :night_with_stars,
+        'rain' => :cloud_with_rain,
+        'snow' => :cloud_with_snow,
+        'sleet' => :cloud_with_rain,
+        'wind' => :leaf_fluttering_in_wind,
+        'fog' => :fog,
+        'cloudy' => :cloud,
+        'partly-cloudy-day' => :partly_cloudy,
+        'partly-cloudy-night' => :cloud
+      }      
+      
+      Emoji2020.new(h[icon()])
+      
+    end
+    
     def evening()     period(17, night_time.hour+1) end
     def morning()     period(6, 12)                 end    
     def night()       period(night_time.hour, 23)   end      
