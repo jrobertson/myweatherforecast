@@ -132,7 +132,7 @@ class MyWeatherForecast
         'partly-cloudy-night' => :cloud
       }      
       
-      Emoji2020.new(h[icon()])
+      Emoji2020.new(h[icon()]).to_s
       
     end
     
