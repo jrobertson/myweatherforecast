@@ -116,11 +116,6 @@ class MyWeatherForecast
       
       h = {
         'clear-day' => :sun,
-        'partly-cloudy-day' => :sun_behind_cloud
-      }
-      
-      h = {
-        'clear-day' => :sun,
         'clear-night' => :night_with_stars,
         'rain' => :cloud_with_rain,
         'snow' => :cloud_with_snow,
@@ -128,7 +123,7 @@ class MyWeatherForecast
         'wind' => :leaf_fluttering_in_wind,
         'fog' => :fog,
         'cloudy' => :cloud,
-        'partly-cloudy-day' => :partly_cloudy,
+        'partly-cloudy-day' => :sun_behind_cloud,
         'partly-cloudy-night' => :cloud
       }      
       
