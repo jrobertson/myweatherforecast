@@ -242,13 +242,16 @@ class MyWeatherForecast
                                       
     end
     
+    def day()
+      Date::ABBR_DAYNAMES[self.time.wday]
+    end
+    
     def to_s
       
-      label = self.time.to_date == Time.now.to_date ? 'Today' : \
-                                            Date::ABBR_DAYNAMES[self.time.wday]
-      
+      label = self.time.to_date == Time.now.to_date ? 'Today' : day()      
       mask = @symbols ? "%s: ▽%s ▲%s, %s" : "%s: %s %s, %s"
       mask % [label, tempmin, tempmax, @x.summary]
+      
     end
     
     def sunrise()
