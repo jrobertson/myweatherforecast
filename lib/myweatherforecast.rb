@@ -94,7 +94,7 @@ class MyWeatherForecast
       
       current_hour = Time.at(@hourly_data[0]['time']).hour + advance
       
-      case current_hour
+      name = case current_hour
       when 12..17
         :afternoon
       when 0..5
@@ -107,9 +107,12 @@ class MyWeatherForecast
         :night
       end      
       
+      method(name).call
+      
     end
     
-    def afternoon()   period(12, 17)                end         
+    def afternoon()   period(12, 17)                end             
+    def detail()      period(0, 23)                 end    
     def early_hours() period(0, 5)                  end
       
     def emoji()
@@ -333,6 +336,22 @@ class MyWeatherForecast
   alias wed wednesday
   alias thu thursday
   alias fri friday
+  
+  def next_3days()
+    
+    days().take(4)[1..-1].map do |x|
+      "%s: %s - %s %s" % [x.time.strftime("%a"), x.tempmin, x.tempmax, x.summary]
+    end.join("\n")    
+    
+  end
+  
+  def next_5days()
+    
+    days().take(6)[1..-1].map do |x|
+      "%s: %s %s" % [x.time.strftime("%a"), x.tempmax, x.summary]  
+    end.join("\n")
+
+  end  
 
   private
   
