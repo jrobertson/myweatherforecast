@@ -340,7 +340,8 @@ class MyWeatherForecast
   def next_3days()
     
     days().take(4)[1..-1].map do |x|
-      "%s: %s - %s %s" % [x.time.strftime("%a"), x.tempmin, x.tempmax, x.summary]
+      "%s: %s - %s #{x.emoji} %s" % [x.time.strftime("%a"), x.tempmin, 
+                                     x.tempmax, x.summary]
     end.join("\n")    
     
   end
